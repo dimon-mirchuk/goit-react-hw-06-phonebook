@@ -1,16 +1,27 @@
+import { useSelector, useDispatch } from "react-redux";
+import { deleteContact } from "../../Redux/contacts/contacts-actions";
 import PropTypes from "prop-types";
 import ContactListItem from "../ContactListItem";
+import { getVisibleContacts } from "../../Redux/contacts/contacts-selectors";
 import styles from "./ContactList.module.css";
 
 const { item, list } = styles;
 
-const ContactList = ({ contacts, onDelete }) => {
-  if (contacts.length === 0) return null;
+const ContactList = () => {
+  const dispatch = useDispatch();
+  const visibleContacts = useSelector(getVisibleContacts);
+  const onDelete = (id) => dispatch(deleteContact(id));
+
   return (
     <ul className={list}>
-      {contacts.map((contact) => (
-        <li className={item} key={contact.id}>
-          <ContactListItem {...contact} onDelete={onDelete} key={contact.id} />
+      {visibleContacts.map(({ id, name, number }) => (
+        <li className={item} key={id}>
+          <ContactListItem
+            id={id}
+            name={name}
+            number={number}
+            onDelete={onDelete}
+          />
         </li>
       ))}
     </ul>
